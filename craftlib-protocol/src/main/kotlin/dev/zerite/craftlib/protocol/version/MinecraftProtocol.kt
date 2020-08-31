@@ -73,6 +73,11 @@ object MinecraftProtocol : AbstractProtocol() {
      */
     @JvmField
     val HANDSHAKE = protocol("Handshake", -1) {
+        clientbound {
+            ClientHandshakePacket {
+                ProtocolVersion.MC1_7_2 to 0x00
+            }
+        }
         serverbound {
             ClientHandshakePacket {
                 ProtocolVersion.MC1_7_2 to 0x00
