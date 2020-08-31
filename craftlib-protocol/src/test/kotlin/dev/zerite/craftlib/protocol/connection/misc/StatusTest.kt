@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.connection.misc
 
-import dev.zerite.craftlib.chat.dsl.chat
+
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.connection.PacketHandler
@@ -9,8 +9,6 @@ import dev.zerite.craftlib.protocol.packet.status.client.ClientStatusPingPacket
 import dev.zerite.craftlib.protocol.packet.status.client.ClientStatusRequestPacket
 import dev.zerite.craftlib.protocol.version.MinecraftProtocol
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.net.InetAddress
 
 /**
@@ -92,7 +90,7 @@ suspend fun main() {
                     nextLog = System.currentTimeMillis() + errorInterval
                 }
                 if (disconnectOnError) {
-                    connection.close(chat { string(cause.toString()) })
+                    connection.close(net.kyori.adventure.text.TextComponent.of(cause.toString()))
                 }
             }
         }

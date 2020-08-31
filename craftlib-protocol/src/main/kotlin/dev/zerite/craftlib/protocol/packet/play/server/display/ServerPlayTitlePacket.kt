@@ -1,7 +1,5 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
@@ -9,6 +7,8 @@ import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.data.registry.RegistryEntry
 import dev.zerite.craftlib.protocol.data.registry.impl.MagicTitleAction
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 
 /**
  * Sent to the client to display a title to the player.
@@ -18,7 +18,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
  */
 data class ServerPlayTitlePacket @JvmOverloads constructor(
     var action: RegistryEntry,
-    var text: BaseChatComponent? = null,
+    var text: Component? = null,
     var fadeIn: Int = 0,
     var stay: Int = 0,
     var fadeOut: Int = 0
@@ -47,7 +47,7 @@ data class ServerPlayTitlePacket @JvmOverloads constructor(
         ) {
             buffer.writeVarInt(MagicTitleAction[version, packet.action, Int::class.java] ?: 0)
             if (packet.action == MagicTitleAction.TITLE || packet.action == MagicTitleAction.SUBTITLE)
-                buffer.writeChat(packet.text ?: StringChatComponent(""))
+                buffer.writeChat(packet.text ?: TextComponent.of(""))
             if (packet.action == MagicTitleAction.TIMES) {
                 buffer.writeInt(packet.fadeIn)
                 buffer.writeInt(packet.stay)

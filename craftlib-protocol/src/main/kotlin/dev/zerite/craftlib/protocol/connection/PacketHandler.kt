@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.connection
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
+import net.kyori.adventure.text.Component
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.util.Cancellable
 
@@ -73,7 +73,7 @@ interface PacketHandler {
      * @author Koding
      * @since  0.1.0-SNAPSHOT
      */
-    fun disconnected(connection: NettyConnection, reason: BaseChatComponent) {}
+    fun disconnected(connection: NettyConnection, reason: Component) {}
 
     /**
      * Fired when this connection encounters an error.

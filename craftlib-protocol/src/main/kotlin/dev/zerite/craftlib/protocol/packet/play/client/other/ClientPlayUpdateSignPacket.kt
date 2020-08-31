@@ -1,13 +1,14 @@
 package dev.zerite.craftlib.protocol.packet.play.client.other
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
 import dev.zerite.craftlib.protocol.Vector3
 import dev.zerite.craftlib.protocol.connection.NettyConnection
+import dev.zerite.craftlib.protocol.util.ext.unformattedText
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 
 /**
  * This message is sent from the client to the server when the "Done" button is pushed after placing a sign.
@@ -19,10 +20,10 @@ data class ClientPlayUpdateSignPacket(
     var x: Int,
     var y: Int,
     var z: Int,
-    var first: BaseChatComponent,
-    var second: BaseChatComponent,
-    var third: BaseChatComponent,
-    var forth: BaseChatComponent
+    var first: Component,
+    var second: Component,
+    var third: Component,
+    var forth: Component
 ) : Packet() {
     companion object : PacketIO<ClientPlayUpdateSignPacket> {
         override fun read(
@@ -45,10 +46,10 @@ data class ClientPlayUpdateSignPacket(
                 buffer.readInt(),
                 buffer.readShort().toInt(),
                 buffer.readInt(),
-                StringChatComponent(buffer.readString()),
-                StringChatComponent(buffer.readString()),
-                StringChatComponent(buffer.readString()),
-                StringChatComponent(buffer.readString())
+                TextComponent.of(buffer.readString()),
+                TextComponent.of(buffer.readString()),
+                TextComponent.of(buffer.readString()),
+                TextComponent.of(buffer.readString())
             )
         }
 

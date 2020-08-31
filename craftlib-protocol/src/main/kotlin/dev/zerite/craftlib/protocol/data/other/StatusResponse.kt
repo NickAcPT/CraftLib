@@ -1,9 +1,9 @@
 package dev.zerite.craftlib.protocol.data.other
 
 import com.google.gson.annotations.SerializedName
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 
 /**
  * Response which is sent in the status response packet to display
@@ -15,7 +15,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
 data class StatusResponse @JvmOverloads constructor(
     var version: StatusVersion = StatusVersion("CraftLib", ProtocolVersion.MC1_7_2),
     var players: StatusPlayers = StatusPlayers(1, 0),
-    var description: BaseChatComponent = StringChatComponent(""),
+    var description: Component = TextComponent.of(""),
     var favicon: String? = null,
     @SerializedName("modinfo") var modInfo: StatusModInfo? = null
 )

@@ -1,8 +1,8 @@
 package dev.zerite.craftlib.protocol.connection
 
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.util.IFlagged
 import io.netty.channel.ServerChannel
+import net.kyori.adventure.text.TextComponent
 
 /**
  * Controls operations regarding a server which has been bound to
@@ -84,7 +84,7 @@ open class NettyServer : IFlagged {
     fun close(wait: Boolean = true) {
         assert(channel != null)
         handler?.closed(this)
-        connections.forEach { it.close(StringChatComponent("Server closed")) }
+        connections.forEach { it.close(TextComponent.of("Server closed")) }
         channel?.close()
             ?.addListener { handler?.closed(this) }
             ?.let { if (wait) it.syncUninterruptibly() }

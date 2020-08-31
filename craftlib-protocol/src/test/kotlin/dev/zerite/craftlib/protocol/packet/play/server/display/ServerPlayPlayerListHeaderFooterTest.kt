@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.component.StringChatComponent
+import net.kyori.adventure.text.TextComponent
 import dev.zerite.craftlib.protocol.packet.PacketTest
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
 
@@ -13,7 +13,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
 class ServerPlayPlayerListHeaderFooterTest :
     PacketTest<ServerPlayPlayerListHeaderFooterPacket>(ServerPlayPlayerListHeaderFooterPacket) {
     init {
-        example(ServerPlayPlayerListHeaderFooterPacket(StringChatComponent("example"), StringChatComponent("text"))) {
+        example(ServerPlayPlayerListHeaderFooterPacket(TextComponent.of("example"), TextComponent.of("text"))) {
             ProtocolVersion.MC1_8 {
                 writeString("{\"text\":\"example\"}")
                 writeString("{\"text\":\"text\"}")

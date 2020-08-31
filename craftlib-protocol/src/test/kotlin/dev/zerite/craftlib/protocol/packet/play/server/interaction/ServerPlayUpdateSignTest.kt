@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.interaction
 
-import dev.zerite.craftlib.chat.component.StringChatComponent
+import net.kyori.adventure.text.TextComponent
 import dev.zerite.craftlib.protocol.Vector3
 import dev.zerite.craftlib.protocol.packet.PacketTest
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
@@ -19,9 +19,9 @@ class ServerPlayUpdateSignTest : PacketTest<ServerPlayUpdateSignPacket>(ServerPl
                 10,
                 100,
                 50,
-                StringChatComponent("first"),
-                StringChatComponent("second"),
-                StringChatComponent("third"), StringChatComponent("forth")
+                TextComponent.of("first"),
+                TextComponent.of("second"),
+                TextComponent.of("third"), TextComponent.of("forth")
             )
         ) {
             ProtocolVersion.MC1_7_2 {
@@ -35,10 +35,10 @@ class ServerPlayUpdateSignTest : PacketTest<ServerPlayUpdateSignPacket>(ServerPl
             }
             ProtocolVersion.MC1_8 {
                 writePosition(Vector3(10, 100, 50))
-                writeChat(StringChatComponent("first"))
-                writeChat(StringChatComponent("second"))
-                writeChat(StringChatComponent("third"))
-                writeChat(StringChatComponent("forth"))
+                writeChat(TextComponent.of("first"))
+                writeChat(TextComponent.of("second"))
+                writeChat(TextComponent.of("third"))
+                writeChat(TextComponent.of("forth"))
             }
         }
         example(
@@ -46,10 +46,10 @@ class ServerPlayUpdateSignTest : PacketTest<ServerPlayUpdateSignPacket>(ServerPl
                 50,
                 50,
                 50,
-                StringChatComponent("line"),
-                StringChatComponent("line"),
-                StringChatComponent("line"),
-                StringChatComponent("line")
+                TextComponent.of("line"),
+                TextComponent.of("line"),
+                TextComponent.of("line"),
+                TextComponent.of("line")
             )
         ) {
             ProtocolVersion.MC1_7_2 {
@@ -63,10 +63,10 @@ class ServerPlayUpdateSignTest : PacketTest<ServerPlayUpdateSignPacket>(ServerPl
             }
             ProtocolVersion.MC1_8 {
                 writePosition(Vector3(50, 50, 50))
-                writeChat(StringChatComponent("line"))
-                writeChat(StringChatComponent("line"))
-                writeChat(StringChatComponent("line"))
-                writeChat(StringChatComponent("line"))
+                writeChat(TextComponent.of("line"))
+                writeChat(TextComponent.of("line"))
+                writeChat(TextComponent.of("line"))
+                writeChat(TextComponent.of("line"))
             }
         }
     }

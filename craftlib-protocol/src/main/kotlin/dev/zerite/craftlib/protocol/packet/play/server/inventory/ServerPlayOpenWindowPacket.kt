@@ -1,14 +1,15 @@
 package dev.zerite.craftlib.protocol.packet.play.server.inventory
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
 import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.data.registry.RegistryEntry
 import dev.zerite.craftlib.protocol.data.registry.impl.MagicInventoryType
+import dev.zerite.craftlib.protocol.util.ext.unformattedText
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 
 /**
  * This is sent to the client when it should open an inventory,
@@ -21,7 +22,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
 data class ServerPlayOpenWindowPacket @JvmOverloads constructor(
     var windowId: Int,
     var type: RegistryEntry,
-    var title: BaseChatComponent,
+    var title: Component,
     var slots: Int,
     var useWindowTitle: Boolean,
     var entityId: Int? = null
@@ -38,7 +39,7 @@ data class ServerPlayOpenWindowPacket @JvmOverloads constructor(
             return ServerPlayOpenWindowPacket(
                 id,
                 type,
-                if (version >= ProtocolVersion.MC1_8) buffer.readChat() else StringChatComponent(buffer.readString()),
+                if (version >= ProtocolVersion.MC1_8) buffer.readChat() else TextComponent.of(buffer.readString()),
                 buffer.readUnsignedByte().toInt(),
                 if (version >= ProtocolVersion.MC1_8) true else buffer.readBoolean(),
                 buffer.takeIf { type == MagicInventoryType.HORSE }?.readInt()

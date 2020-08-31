@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.component.StringChatComponent
+import net.kyori.adventure.text.TextComponent
 import dev.zerite.craftlib.protocol.data.registry.impl.MagicTitleAction
 import dev.zerite.craftlib.protocol.packet.PacketTest
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
@@ -13,7 +13,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
  */
 class ServerPlayTitleTest : PacketTest<ServerPlayTitlePacket>(ServerPlayTitlePacket) {
     init {
-        example(ServerPlayTitlePacket(MagicTitleAction.TITLE, text = StringChatComponent("test"))) {
+        example(ServerPlayTitlePacket(MagicTitleAction.TITLE, text = TextComponent.of("test"))) {
             ProtocolVersion.MC1_8 {
                 writeVarInt(0)
                 writeString("{\"text\":\"test\"}")

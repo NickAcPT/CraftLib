@@ -2,9 +2,6 @@
 
 package dev.zerite.craftlib.protocol
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.chatComponent
-import dev.zerite.craftlib.chat.component.json
 import dev.zerite.craftlib.nbt.NBTIO
 import dev.zerite.craftlib.nbt.impl.CompoundTag
 import dev.zerite.craftlib.nbt.impl.NamedTag
@@ -12,12 +9,15 @@ import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.data.entity.EntityMetadata
 import dev.zerite.craftlib.protocol.data.entity.MetadataValue
 import dev.zerite.craftlib.protocol.data.entity.RotationData
+import dev.zerite.craftlib.protocol.util.ext.chatComponent
+import dev.zerite.craftlib.protocol.util.ext.json
 import dev.zerite.craftlib.protocol.util.ext.toUuid
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.Unpooled
 import kotlinx.coroutines.runBlocking
+import net.kyori.adventure.text.Component
 import java.io.ByteArrayOutputStream
 import java.io.DataInput
 import java.io.DataInputStream
@@ -444,7 +444,7 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
      * @author Koding
      * @since  0.1.0-SNAPSHOT
      */
-    fun writeChat(value: BaseChatComponent) = writeString(value.json)
+    fun writeChat(value: Component) = writeString(value.json)
 
     /**
      * Reads a long from the buffer and returns it.

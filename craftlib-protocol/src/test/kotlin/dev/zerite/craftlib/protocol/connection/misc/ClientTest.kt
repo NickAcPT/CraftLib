@@ -2,7 +2,7 @@ package dev.zerite.craftlib.protocol.connection.misc
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import dev.zerite.craftlib.chat.dsl.chat
+
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.connection.PacketHandler
@@ -16,6 +16,7 @@ import dev.zerite.craftlib.protocol.util.Crypto
 import dev.zerite.craftlib.protocol.util.ext.toUuid
 import dev.zerite.craftlib.protocol.version.MinecraftProtocol
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.TextComponent
 import java.math.BigInteger
 import java.net.HttpURLConnection
 import java.net.InetAddress
@@ -200,7 +201,7 @@ suspend fun main() {
                     nextLog = System.currentTimeMillis() + errorInterval
                 }
                 if (disconnectOnError) {
-                    connection.close(chat { string(cause.toString()) })
+                    connection.close(TextComponent.of(cause.toString()))
                 }
             }
         }

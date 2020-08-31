@@ -1,9 +1,10 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.dsl.chat
-import dev.zerite.craftlib.chat.type.ChatColor
+
+
 import dev.zerite.craftlib.protocol.packet.PacketTest
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.format.NamedTextColor
 
 /**
  * Tests that the chat message packet is properly reading and writing the
@@ -15,14 +16,14 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
 class ServerPlayChatMessageTest : PacketTest<ServerPlayChatMessagePacket>(ServerPlayChatMessagePacket) {
 
     init {
-        example(ServerPlayChatMessagePacket(chat { string("placeholder") }))
-        example(ServerPlayChatMessagePacket(chat { string("Sample Text") }))
-        example(ServerPlayChatMessagePacket(chat { string("writing test") + ChatColor.BLUE })) {
+        example(ServerPlayChatMessagePacket(net.kyori.adventure.text.TextComponent.of("placeholder")))
+        example(ServerPlayChatMessagePacket(net.kyori.adventure.text.TextComponent.of("Sample Text")))
+        example(ServerPlayChatMessagePacket(net.kyori.adventure.text.TextComponent.of("writing test").color(NamedTextColor.BLUE))) {
             ProtocolVersion.MC1_7_2 {
-                writeChat(chat { string("writing test") + ChatColor.BLUE })
+                writeChat(net.kyori.adventure.text.TextComponent.of("writing test").color(NamedTextColor.BLUE))
             }
             ProtocolVersion.MC1_8 {
-                writeChat(chat { string("writing test") + ChatColor.BLUE })
+                writeChat(net.kyori.adventure.text.TextComponent.of("writing test").color(NamedTextColor.BLUE))
                 writeByte(0)
             }
         }

@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
+import net.kyori.adventure.text.Component
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
@@ -109,7 +109,7 @@ data class ServerPlayPlayerListItemPacket(
         var properties: Array<PlayerProperty> = arrayOf(),
         var gamemode: RegistryEntry = MagicGamemode.SURVIVAL,
         var ping: Int = 0,
-        var displayName: BaseChatComponent? = null
+        var displayName: Component? = null
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

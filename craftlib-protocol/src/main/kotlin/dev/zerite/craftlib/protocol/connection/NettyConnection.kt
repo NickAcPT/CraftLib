@@ -1,8 +1,6 @@
 @file:JvmName("NettyConnectionUtil")
 package dev.zerite.craftlib.protocol.connection
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.connection.io.CompressionCodec
 import dev.zerite.craftlib.protocol.connection.io.EncryptionCodec
@@ -17,6 +15,8 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPipeline
 import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.util.AttributeKey
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import javax.crypto.SecretKey
 
 /**
@@ -148,7 +148,7 @@ open class NettyConnection(val direction: PacketDirection) : SimpleChannelInboun
      * @since  0.1.0-SNAPSHOT
      */
     @Suppress("UNUSED")
-    fun close(reason: BaseChatComponent, packets: Boolean = true) =
+    fun close(reason: Component, packets: Boolean = true) =
         channel
             .takeIf { !disconnected }
             ?.apply {
@@ -184,7 +184,7 @@ open class NettyConnection(val direction: PacketDirection) : SimpleChannelInboun
      */
     override fun channelInactive(ctx: ChannelHandlerContext) {
         // Run the handler
-        close(StringChatComponent("Disconnected"), packets = false)
+        close(TextComponent.of("Disconnected"), packets = false)
         server?.disconnected(this)
     }
 

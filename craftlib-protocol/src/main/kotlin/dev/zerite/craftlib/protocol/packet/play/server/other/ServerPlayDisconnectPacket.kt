@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.other
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
+import net.kyori.adventure.text.Component
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
@@ -14,7 +14,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
  * @author Koding
  * @since  0.1.0-SNAPSHOT
  */
-data class ServerPlayDisconnectPacket(var reason: BaseChatComponent) : Packet() {
+data class ServerPlayDisconnectPacket(var reason: Component) : Packet() {
     companion object : PacketIO<ServerPlayDisconnectPacket> {
         override fun read(
             buffer: ProtocolBuffer,

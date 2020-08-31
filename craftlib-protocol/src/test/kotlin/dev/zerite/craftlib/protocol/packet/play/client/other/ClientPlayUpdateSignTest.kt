@@ -1,9 +1,9 @@
 package dev.zerite.craftlib.protocol.packet.play.client.other
 
-import dev.zerite.craftlib.chat.component.StringChatComponent
 import dev.zerite.craftlib.protocol.Vector3
 import dev.zerite.craftlib.protocol.packet.PacketTest
 import dev.zerite.craftlib.protocol.version.ProtocolVersion
+import net.kyori.adventure.text.TextComponent
 
 /**
  * This message is sent from the client to the server when the "Done" button is pushed after placing a sign.
@@ -18,10 +18,10 @@ class ClientPlayUpdateSignTest : PacketTest<ClientPlayUpdateSignPacket>(ClientPl
                 130,
                 90,
                 130,
-                StringChatComponent("This"),
-                StringChatComponent("is"),
-                StringChatComponent("a"),
-                StringChatComponent("Test")
+                TextComponent.of("This"),
+                TextComponent.of("is"),
+                TextComponent.of("a"),
+                TextComponent.of("Test")
             )
         ) {
             ProtocolVersion.MC1_7_2 {

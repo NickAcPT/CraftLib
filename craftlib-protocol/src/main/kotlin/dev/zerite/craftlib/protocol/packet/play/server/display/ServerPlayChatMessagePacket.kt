@@ -1,6 +1,6 @@
 package dev.zerite.craftlib.protocol.packet.play.server.display
 
-import dev.zerite.craftlib.chat.component.BaseChatComponent
+import net.kyori.adventure.text.Component
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
 import dev.zerite.craftlib.protocol.ProtocolBuffer
@@ -16,7 +16,7 @@ import dev.zerite.craftlib.protocol.version.ProtocolVersion
  * @since  0.1.0-SNAPSHOT
  */
 data class ServerPlayChatMessagePacket @JvmOverloads constructor(
-    var message: BaseChatComponent,
+    var message: Component,
     var position: RegistryEntry = MagicChatPosition.CHAT
 ) : Packet() {
     companion object : PacketIO<ServerPlayChatMessagePacket> {

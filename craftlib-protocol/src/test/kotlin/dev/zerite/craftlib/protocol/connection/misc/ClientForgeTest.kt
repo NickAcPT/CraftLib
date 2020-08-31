@@ -2,8 +2,8 @@ package dev.zerite.craftlib.protocol.connection.misc
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import dev.zerite.craftlib.chat.component.StringChatComponent
-import dev.zerite.craftlib.chat.dsl.chat
+import net.kyori.adventure.text.TextComponent
+
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.compat.forge.forge
 import dev.zerite.craftlib.protocol.compat.forge.packet.client.ClientForgeHandshakeHelloPacket
@@ -135,7 +135,7 @@ suspend fun main() {
                     packet.response.modInfo?.modList?.forEach {
                         mods += GlobalForgeHandshakeModListPacket.Mod(it.modId, it.version)
                     } ?: error("Server is not using Forge")
-                    connection.close(StringChatComponent("Disconnecting"))
+                    connection.close(TextComponent.of("Disconnecting"))
                 }
             }
         }
@@ -292,7 +292,7 @@ suspend fun main() {
                     nextLog = System.currentTimeMillis() + errorInterval
                 }
                 if (disconnectOnError) {
-                    connection.close(chat { string(cause.toString()) })
+                    connection.close(TextComponent.of(cause.toString()))
                 }
             }
         }
