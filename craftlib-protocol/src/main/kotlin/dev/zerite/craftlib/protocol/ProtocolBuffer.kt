@@ -9,6 +9,7 @@ import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.data.entity.EntityMetadata
 import dev.zerite.craftlib.protocol.data.entity.MetadataValue
 import dev.zerite.craftlib.protocol.data.entity.RotationData
+import dev.zerite.craftlib.protocol.data.other.NamespacedLocation
 import dev.zerite.craftlib.protocol.util.ext.chatComponent
 import dev.zerite.craftlib.protocol.util.ext.json
 import dev.zerite.craftlib.protocol.util.ext.toUuid
@@ -22,6 +23,9 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInput
 import java.io.DataInputStream
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -902,6 +906,41 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
      */
     fun writePosition(position: Vector3) =
         writeLong(((position.x.toLong() and 0x3FFFFFFL) shl 38) or ((position.y.toLong() and 0xFFFL) shl 26) or (position.z.toLong() and 0x3FFFFFFL))
+
+    /**
+     * Reads a namespaced location identifier from the buffer.
+     *
+     * @author NickAcPT
+     * @since 0.1.5-SNAPSHOT
+     */
+    fun readIdentifier(): NamespacedLocation = NamespacedLocation.fromString(readString())
+
+    /**
+     * Writes a namespaced location identifier to the buffer.
+     *
+     * @param identifier        The identifier to write into the buffer.
+     * @author NickAcPT
+     * @since 0.1.5-SNAPSHOT
+     */
+    fun writeIdentifier(identifier: NamespacedLocation) = writeString(identifier.toString())
+
+    @OptIn(ExperimentalContracts::class)
+    fun writeOptional(data: Any?, function: () -> Unit): Boolean {
+        contract {
+            returns(true) implies (data != null)
+            returns(false) implies (data == null)
+        }
+        writeBoolean(data != null) //is present
+        data?.apply { function() } //write data if not null
+
+        return data != null
+    }
+
+    fun <T> readOptional(function: () -> T?): T? {
+        if (!readBoolean()) //is present
+            return null
+        return function()
+    }
 
     /**
      * Set of modes which the UUIDs should be written using.

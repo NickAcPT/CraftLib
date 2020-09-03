@@ -1,2 +1,4 @@
 rootProject.name = 'CraftLib'
 include ':craftlib-chat', ':craftlib-commons', ':craftlib-nbt', ':craftlib-protocol', ':craftlib-schematic'
+include 'craftlib-protocol-gen'
+

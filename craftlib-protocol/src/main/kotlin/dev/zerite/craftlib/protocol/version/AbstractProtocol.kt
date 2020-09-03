@@ -33,7 +33,7 @@ abstract class AbstractProtocol {
      * @author Koding
      * @since  0.1.0-SNAPSHOT
      */
-    protected fun protocol(name: String, id: Any, block: ProtocolState.() -> Unit) =
+    internal fun protocol(name: String, id: Any, block: ProtocolState.() -> Unit) =
         ProtocolState(name, id).apply(block).apply { mapped[id] = this }
 
 }
