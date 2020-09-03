@@ -2,15 +2,8 @@ package dev.zerite.craftlib.protocol.connection.io
 
 import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.PacketIO
-import dev.zerite.craftlib.protocol.compat.forge.ForgePacket
-import dev.zerite.craftlib.protocol.compat.forge.ForgeProtocol
-import dev.zerite.craftlib.protocol.compat.forge.forge
 import dev.zerite.craftlib.protocol.connection.NettyConnection
 import dev.zerite.craftlib.protocol.packet.base.RawPacket
-import dev.zerite.craftlib.protocol.packet.play.client.other.ClientPlayPluginMessagePacket
-import dev.zerite.craftlib.protocol.packet.play.server.other.ServerPlayPluginMessagePacket
-import dev.zerite.craftlib.protocol.version.MinecraftProtocol
-import dev.zerite.craftlib.protocol.version.PacketDirection
 import dev.zerite.craftlib.protocol.wrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
@@ -51,24 +44,7 @@ class PacketCodec(private val connection: NettyConnection) : ByteToMessageCodec<
         var customPacket = packet
 
         // Get the packet registry data
-        val data = when (packet) {
-            is ForgePacket -> {
-                val item = ForgeProtocol.HANDSHAKE[connection.direction][connection.version, packet] ?: return
-                connection.forge = true
-
-                val bytes = Unpooled.buffer().wrap(connection)
-                bytes.writeByte(item.id)
-                (item.io as? PacketIO<Packet>)?.write(bytes, connection.version, packet, connection)
-
-                val array = bytes.readByteArray(length = bytes.readableBytes)
-                customPacket = if (connection.direction == PacketDirection.SERVERBOUND)
-                    ClientPlayPluginMessagePacket(ForgeProtocol.HANDSHAKE.id.toString(), array)
-                else ServerPlayPluginMessagePacket(ForgeProtocol.HANDSHAKE.id.toString(), array)
-
-                MinecraftProtocol.PLAY[connection.direction][connection.version, customPacket] ?: return
-            }
-            else -> connection.state[connection.direction][connection.version, packet]
-        } ?: return run {
+        val data = connection.state[connection.direction][connection.version, packet] ?: return run {
             val raw = packet as? RawPacket ?: return@run
             buffer.writeVarInt(raw.id)
             buffer.writeBytes(raw.data)
@@ -103,46 +79,6 @@ class PacketCodec(private val connection: NettyConnection) : ByteToMessageCodec<
         val packet = (io?.read(buffer, connection.version, connection)
             ?: RawPacket(id, buffer.readByteArray(buf.readableBytes())))
             .apply { out.add(this) }
-
-        when (packet) {
-            is ServerPlayPluginMessagePacket -> {
-                when (packet.channel) {
-                    "FML|MP" -> {
-                        connection.forge = true
-                        val data = Unpooled.wrappedBuffer(packet.data).wrap(connection)
-
-                        forgeMultipartData?.let {
-                            it.buffer.writeBytes(data.readByteArray(length = data.readableBytes))
-                            it.read++
-
-                            if (it.read == it.parts) {
-                                val protocol = ForgeProtocol[packet.channel] ?: run { forgeMultipartData = null; return@let }
-
-                                val wrapped = it.buffer.wrap(connection)
-                                val forgeId = wrapped.readByte().toInt()
-                                val forge = protocol[decodeDirection][connection.version, forgeId]?.io ?: return@let
-                                out.add(forge.read(data, connection.version, connection))
-
-                                forgeMultipartData = null
-                            }
-                        } ?: run {
-                            forgeMultipartData = ForgeMultipartData(
-                                data.readString(),
-                                data.readUnsignedByte().toInt(),
-                                data.readInt()
-                            )
-                        }
-                    }
-                    else -> ForgeProtocol[packet.channel]?.let {
-                        connection.forge = true
-                        val data = Unpooled.wrappedBuffer(packet.data).wrap(connection)
-                        val forgeId = data.readByte().toInt()
-                        val forge = it[decodeDirection][connection.version, forgeId]?.io ?: return@let
-                        out.add(forge.read(data, connection.version, connection))
-                    }
-                }
-            }
-        }
 
         /*
          * Check if the packet didn't read all of its bytes.
