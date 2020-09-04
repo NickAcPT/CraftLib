@@ -35,7 +35,7 @@ import java.net.InetAddress
  * @author Koding
  * @since  0.1.0-SNAPSHOT
  */
-@MinecraftProtocolAnnotation("1.16.1")
+@MinecraftProtocolAnnotation("1.16.1", true)
 object MinecraftProtocol : AbstractProtocol() {
 
     /**
@@ -49,9 +49,7 @@ object MinecraftProtocol : AbstractProtocol() {
      * be receiving game updates.
      */
     @JvmField
-    val PLAY = protocol("Play", 0) {
-    }
-
+    val PLAY = MinecraftProtocolGenerated.PLAY(this)
     /**
      * Handles packets relating to providing server list info.
      */

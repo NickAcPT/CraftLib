@@ -268,6 +268,15 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
     fun readByte() = buf.readByte()
 
     /**
+     * Reads a single byte from the buffer.
+     *
+     * @author Koding
+     * @since  0.1.0-SNAPSHOT
+     */
+    @Suppress("UNUSED")
+    fun readByteAsInt() = buf.readByte().toInt()
+
+    /**
      * Write a single byte to the buffer.
      *
      * @param  value    The value to write.
@@ -478,7 +487,7 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
      * @since  0.1.0-SNAPSHOT
      */
     @JvmOverloads
-    fun readUUID(mode: UUIDMode = UUIDMode.STRING) = when (mode) {
+    fun readUUID(mode: UUIDMode = UUIDMode.RAW) = when (mode) {
         UUIDMode.DASHES -> readString().toUuid(dashes = true)
         UUIDMode.STRING -> readString().toUuid()
         UUIDMode.RAW -> UUID(readLong(), readLong())
@@ -494,7 +503,7 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
      * @since  0.1.0-SNAPSHOT
      */
     @JvmOverloads
-    fun writeUUID(value: UUID, mode: UUIDMode = UUIDMode.STRING): Any =
+    fun writeUUID(value: UUID, mode: UUIDMode = UUIDMode.RAW): Any =
         when (mode) {
             UUIDMode.DASHES -> writeString(value.toString().replace("-", ""))
             UUIDMode.STRING -> writeString(value.toString())

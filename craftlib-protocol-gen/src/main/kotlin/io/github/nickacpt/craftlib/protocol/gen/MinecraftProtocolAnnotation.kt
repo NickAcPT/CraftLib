@@ -1,3 +1,3 @@
 package io.github.nickacpt.craftlib.protocol.gen
 
-annotation class MinecraftProtocolAnnotation(val version: String)
+annotation class MinecraftProtocolAnnotation(val version: String, val ignoreInvalidPackets: Boolean = false)

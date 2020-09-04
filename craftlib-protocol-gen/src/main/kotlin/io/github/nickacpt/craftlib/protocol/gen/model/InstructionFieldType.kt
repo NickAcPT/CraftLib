@@ -1,10 +1,10 @@
 package io.github.nickacpt.craftlib.protocol.gen.model
 
-import com.squareup.kotlinpoet.*
-import io.github.nickacpt.craftlib.protocol.gen.codegen.chatComponentType
-import io.github.nickacpt.craftlib.protocol.gen.codegen.namespacedLocationType
-import io.github.nickacpt.craftlib.protocol.gen.codegen.uuidType
-import java.util.*
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.BYTE_ARRAY
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.TypeName
+import io.github.nickacpt.craftlib.protocol.gen.codegen.*
 
 enum class InstructionFieldType(
     val methodSuffix: String,
@@ -25,10 +25,21 @@ enum class InstructionFieldType(
     BYTEARRAY(
         jsonName = "byte[]", methodSuffix = "ByteArray",
         writeSuffixArgs = arrayOf(CodeBlock.of("{ if (version >= ProtocolVersion.MC1_8) writeVarInt(it) else writeShort(it) }")),
-        readSuffixArgs = arrayOf(CodeBlock.of("null"), CodeBlock.of("{ if (version >= ProtocolVersion.MC1_8) readVarInt() else readShort().toInt() }")),
+        readSuffixArgs = arrayOf(
+            CodeBlock.of("null"),
+            CodeBlock.of("{ if (version >= ProtocolVersion.MC1_8) readVarInt() else readShort().toInt() }")
+        ),
     ),
     UUID(methodSuffix = "UUID"),
     IDENTIFIER(methodSuffix = "Identifier"),
+    BYTE(methodSuffix = "Byte", existingReadMethod = "readByteAsInt"),
+    DOUBLE(methodSuffix = "Double"),
+    ENUM(methodSuffix = "VarInt"),
+    POSITION(methodSuffix = "Position"),
+    BOOLEAN(methodSuffix = "Boolean"),
+    ITEMSTACK(methodSuffix = "Slot"),
+    FLOAT(methodSuffix = "Float"),
+    VARLONG(methodSuffix = "VarLong"),
     UNKNOWN("");
 
     val writeMethod = existingWriteMethod ?: "write${methodSuffix}"
@@ -36,7 +47,7 @@ enum class InstructionFieldType(
 
     val asConstructorType: TypeName by lazy {
         when (this) {
-            INT, VARINT -> com.squareup.kotlinpoet.INT
+            ENUM, BYTE, INT, VARINT -> com.squareup.kotlinpoet.INT
             STRING -> com.squareup.kotlinpoet.STRING
             VARSHORT, SHORT -> com.squareup.kotlinpoet.INT
             CHATCOMPONENT -> chatComponentType
@@ -44,7 +55,12 @@ enum class InstructionFieldType(
             BYTEARRAY -> BYTE_ARRAY
             UUID -> uuidType
             IDENTIFIER -> namespacedLocationType
-            LONG -> com.squareup.kotlinpoet.LONG
+            VARLONG, LONG -> com.squareup.kotlinpoet.LONG
+            DOUBLE -> com.squareup.kotlinpoet.DOUBLE
+            POSITION -> vector3Type
+            BOOLEAN -> com.squareup.kotlinpoet.BOOLEAN
+            ITEMSTACK -> slotType
+            FLOAT -> com.squareup.kotlinpoet.FLOAT
         }
     }
 }

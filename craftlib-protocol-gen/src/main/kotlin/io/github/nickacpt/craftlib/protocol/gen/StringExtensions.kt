@@ -32,3 +32,9 @@ public fun String.removePrefixIgnoreCase(prefix: CharSequence): String {
     }
     return this
 }
+
+
+internal val String.hasIllegalCharacters get() = this.any { ILLEGAL_CHARACTERS_TO_ESCAPE.contains(it) }
+
+// https://github.com/JetBrains/kotlin/blob/master/compiler/frontend.java/src/org/jetbrains/kotlin/resolve/jvm/checkers/JvmSimpleNameBacktickChecker.kt
+private val ILLEGAL_CHARACTERS_TO_ESCAPE = setOf('.', ';', '[', ']', '/', '<', '>', ':', '\\', '(', ')')

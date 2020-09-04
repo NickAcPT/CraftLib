@@ -5,6 +5,7 @@ import dev.zerite.craftlib.protocol.Packet
 import dev.zerite.craftlib.protocol.connection.io.CompressionCodec
 import dev.zerite.craftlib.protocol.connection.io.EncryptionCodec
 import dev.zerite.craftlib.protocol.login.server.LoginDisconnectPacket
+import dev.zerite.craftlib.protocol.play.server.DisconnectPacket
 import dev.zerite.craftlib.protocol.util.IFlagged
 import dev.zerite.craftlib.protocol.version.MinecraftProtocol
 import dev.zerite.craftlib.protocol.version.PacketDirection
@@ -155,7 +156,7 @@ open class NettyConnection(val direction: PacketDirection) : SimpleChannelInboun
 
                 if (packets)
                     when (state) {
-                        //MinecraftProtocol.PLAY -> send(ServerPlayDisconnectPacket(reason))
+                        MinecraftProtocol.PLAY -> send(DisconnectPacket(reason))
                         MinecraftProtocol.LOGIN -> send(LoginDisconnectPacket(reason))
                     }
             }

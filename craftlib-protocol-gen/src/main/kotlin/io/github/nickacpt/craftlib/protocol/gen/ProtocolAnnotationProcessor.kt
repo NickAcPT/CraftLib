@@ -21,7 +21,10 @@ import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
 class ProtocolAnnotationProcessor : AbstractProcessor() {
-    private lateinit var env: ProcessingEnvironment
+
+    companion object {
+        lateinit var env: ProcessingEnvironment
+    }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(MinecraftProtocolAnnotation::class.java.name)
@@ -75,7 +78,7 @@ class ProtocolAnnotationProcessor : AbstractProcessor() {
                 val adapter = moshi.adapter(Array<ProtocolData>::class.java)
                 val protocolData = adapter.fromJson(json)?.first() ?: throw Throwable("Unable to parse version JSON")
 
-                val packetsToGenerate = protocolData.packets.filter { it.state != ProtocolState.PLAY }
+                val packetsToGenerate = protocolData.packets.filter { p -> !it.ignoreInvalidPackets || p.fields.none { it.rawType == InstructionFieldType.UNKNOWN } }
                 val protocolGenerated = TypeSpec.objectBuilder("MinecraftProtocolGenerated")
 
                 packetsToGenerate.groupBy { it.state }.forEach { (protocolState, packetList) ->

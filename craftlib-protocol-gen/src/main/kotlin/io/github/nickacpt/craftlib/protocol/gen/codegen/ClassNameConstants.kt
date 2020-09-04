@@ -21,3 +21,7 @@ val namespacedLocationType = ClassName("dev.zerite.craftlib.protocol.data.other"
 val protocolStateType = ClassName("dev.zerite.craftlib.protocol.version", "ProtocolState")
 
 val abstractProtocolType = ClassName("dev.zerite.craftlib.protocol.version", "AbstractProtocol")
+
+val vector3Type = ClassName("dev.zerite.craftlib.protocol", "Vector3")
+
+val slotType = ClassName("dev.zerite.craftlib.protocol", "Slot")

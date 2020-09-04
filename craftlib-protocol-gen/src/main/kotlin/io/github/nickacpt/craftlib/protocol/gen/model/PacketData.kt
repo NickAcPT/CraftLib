@@ -1,5 +1,6 @@
 package io.github.nickacpt.craftlib.protocol.gen.model
 
+import io.github.nickacpt.craftlib.protocol.gen.hasIllegalCharacters
 import io.github.nickacpt.craftlib.protocol.gen.snakeToLowerCamelCase
 
 data class PacketData(
@@ -9,17 +10,26 @@ data class PacketData(
     val state: ProtocolState,
     val instructions: List<PacketInstruction>
 ) {
+    var valid: Boolean = true
     val fields: MutableList<PacketField> = mutableListOf()
 
-    fun inferPacketFields() {
+    fun inferPacketFields(): Boolean {
         val instructions = instructions
         instructions
             .forEach { instruction ->
-                instructionToField(instruction, instructions)?.let { fields.add(it) }
+                instructionToField(instruction, instructions)?.let {
+                    if (it.name.hasIllegalCharacters) {
+                        return false
+                    } else {
+                        fields.add(it)
+                    }
+                }
             }
+
+        return true
     }
 
-    val fieldValueMap = mutableListOf(
+    private val fieldValueMap = listOf(
         listOf("SerializableUUID", "uuidToIntArray") to InstructionFieldType.UUID,
         listOf("GSON", "toJson") to InstructionFieldType.JSON
 
@@ -82,10 +92,11 @@ data class PacketData(
             return PacketField(fieldValue, type, type.asConstructorType)
 
         } else if (instruction.operation == InstructionOperation.IF) {
-            val condition = instruction.condition ?: return null
+            var condition = instruction.condition ?: return null
             val instructions = instruction.instructions ?: return null
             val instructionsAsFields = instructions.mapNotNull { instructionToField(it, instructions) }
 
+            condition = condition.removeSuffix(" ? 1 : 0").removeSurrounding("(", ")")
             val notNullSuffix = " != null"
             //We hit an optional value
             if (condition.endsWith(notNullSuffix)) {
